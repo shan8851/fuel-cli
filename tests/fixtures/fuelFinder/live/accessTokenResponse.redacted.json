@@ -1,0 +1,10 @@
+{
+  "data": {
+    "access_token": "REDACTED",
+    "expires_in": 3600,
+    "refresh_token": "REDACTED",
+    "token_type": "Bearer"
+  },
+  "message": "Operation successful",
+  "success": true
+}

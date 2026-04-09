@@ -1,0 +1,17 @@
+{
+  "baseUrl": "https://www.fuel-finder.service.gov.uk",
+  "capturedAt": "2026-04-09T13:50:20.264Z",
+  "notes": "Sanitized live fixture capture. Access tokens are redacted and station/price batches are reduced to overlapping sample records.",
+  "priceBatchCount": 500,
+  "priceSampleCount": 5,
+  "sampleSizeRequested": 5,
+  "sharedNodeIds": [
+    "4882e3fee979cfefa29a8777ce57ca0ecea27b4f12ba7fb538ed0855d6b0af1c",
+    "b739362af81acc9fec9eda6f155348125fa2d5c1772c96bf6855a1bad0179711",
+    "ae5b2f8f6979b8b2460ff52f85619dd0dfc6a10bc98ca1340b205911f20d4df5",
+    "991498d756f4d2c04bf9f1c0f921e2ac56fcd9c1798b7e57fb0fccecde267e22",
+    "7becfac4d4da3b34391e01a63ec5e0cffd8c9e9b258dfb9553b63ff076bdca28"
+  ],
+  "stationBatchCount": 500,
+  "stationSampleCount": 5
+}

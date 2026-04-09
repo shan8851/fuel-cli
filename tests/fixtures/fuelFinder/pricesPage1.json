@@ -1,0 +1,48 @@
+{
+  "data": [
+    {
+      "node_id": "node-1",
+      "public_phone_number": "+442071930000",
+      "trading_name": "Tesco Riverside",
+      "fuel_prices": [
+        {
+          "fuel_type": "E10",
+          "price": 132.9,
+          "price_last_updated": "2026-04-09T10:00:00.000Z",
+          "price_change_effective_timestamp": "2026-04-09T09:45:00.000Z"
+        },
+        {
+          "fuel_type": "E5",
+          "price": 141.9,
+          "price_last_updated": "2026-04-09T10:00:00.000Z",
+          "price_change_effective_timestamp": "2026-04-09T09:45:00.000Z"
+        },
+        {
+          "fuel_type": "B7_STANDARD",
+          "price": 145.9,
+          "price_last_updated": "2026-04-09T09:30:00.000Z",
+          "price_change_effective_timestamp": "2026-04-09T09:00:00.000Z"
+        }
+      ]
+    },
+    {
+      "node_id": "node-2",
+      "public_phone_number": null,
+      "trading_name": "Shell Southwark",
+      "fuel_prices": [
+        {
+          "fuel_type": "E10",
+          "price": 131.7,
+          "price_last_updated": "2026-04-09T06:00:00.000Z",
+          "price_change_effective_timestamp": "2026-04-09T05:45:00.000Z"
+        },
+        {
+          "fuel_type": "B7_STANDARD",
+          "price": 143.3,
+          "price_last_updated": "2026-04-09T06:00:00.000Z",
+          "price_change_effective_timestamp": "2026-04-09T05:45:00.000Z"
+        }
+      ]
+    }
+  ]
+}

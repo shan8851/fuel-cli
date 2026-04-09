@@ -1,0 +1,65 @@
+{
+  "name": "@shan8851/fuel-cli",
+  "version": "0.1.0",
+  "description": "UK fuel prices in your terminal. Built for AI agents, still useful for humans.",
+  "type": "module",
+  "bin": {
+    "fuel": "dist/cli.js"
+  },
+  "files": [
+    "dist",
+    "README.md",
+    "LICENSE",
+    "package.json"
+  ],
+  "engines": {
+    "node": ">=22"
+  },
+  "packageManager": "pnpm@10.23.0",
+  "scripts": {
+    "build": "tsup",
+    "check": "pnpm typecheck && pnpm lint && pnpm test && pnpm build",
+    "dev": "tsx src/cli.ts",
+    "fixtures:capture:live": "tsx scripts/captureLiveFixtures.ts",
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix",
+    "test": "vitest run",
+    "typecheck": "tsc --noEmit -p tsconfig.typecheck.json"
+  },
+  "keywords": [
+    "cli",
+    "fuel",
+    "fuel-finder",
+    "uk",
+    "petrol",
+    "diesel",
+    "ai-agent",
+    "agents"
+  ],
+  "author": "shan8851",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/shan8851/fuel-cli.git"
+  },
+  "homepage": "https://github.com/shan8851/fuel-cli",
+  "bugs": {
+    "url": "https://github.com/shan8851/fuel-cli/issues"
+  },
+  "dependencies": {
+    "commander": "^14.0.1",
+    "dotenv": "^17.2.3",
+    "zod": "^4.1.11"
+  },
+  "devDependencies": {
+    "@eslint/js": "^9.39.1",
+    "@types/node": "^24.6.0",
+    "eslint": "^9.39.1",
+    "globals": "^16.4.0",
+    "tsup": "^8.5.0",
+    "tsx": "^4.20.6",
+    "typescript": "^5.9.3",
+    "typescript-eslint": "^8.46.1",
+    "vitest": "^3.2.4"
+  }
+}

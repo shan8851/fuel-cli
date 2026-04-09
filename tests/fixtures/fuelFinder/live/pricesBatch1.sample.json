@@ -1,0 +1,121 @@
+[
+  {
+    "fuel_prices": [
+      {
+        "fuel_type": "E10",
+        "price": 154.9,
+        "price_change_effective_timestamp": "2026-04-07T16:52:50.000Z",
+        "price_last_updated": "2026-04-07T15:55:35.594Z"
+      },
+      {
+        "fuel_type": "B7_STANDARD",
+        "price": 185.9,
+        "price_change_effective_timestamp": "2026-04-07T16:48:03.000Z",
+        "price_last_updated": "2026-04-07T15:50:25.877Z"
+      }
+    ],
+    "node_id": "4882e3fee979cfefa29a8777ce57ca0ecea27b4f12ba7fb538ed0855d6b0af1c",
+    "public_phone_number": "+448003234040",
+    "trading_name": "PONTYPOOL SUPERSTORE - PETROL FILLING STATION"
+  },
+  {
+    "fuel_prices": [
+      {
+        "fuel_type": "E10",
+        "price": 154.7,
+        "price_change_effective_timestamp": "2026-04-07T10:10:10.000Z",
+        "price_last_updated": "2026-04-07T10:10:10.000Z"
+      },
+      {
+        "fuel_type": "B7_STANDARD",
+        "price": 185.7,
+        "price_change_effective_timestamp": "2026-04-07T10:10:10.000Z",
+        "price_last_updated": "2026-04-07T10:10:10.000Z"
+      }
+    ],
+    "node_id": "b739362af81acc9fec9eda6f155348125fa2d5c1772c96bf6855a1bad0179711",
+    "public_phone_number": "+44345 602 9528",
+    "trading_name": "WINCHCOMBE FUEL EXPRESS AUTOMAT"
+  },
+  {
+    "fuel_prices": [
+      {
+        "fuel_type": "E5",
+        "price": 169.9,
+        "price_change_effective_timestamp": "2026-04-04T21:09:09.000Z",
+        "price_last_updated": "2026-04-04T21:09:09.000Z"
+      },
+      {
+        "fuel_type": "E10",
+        "price": 153.9,
+        "price_change_effective_timestamp": "2026-04-04T21:09:09.000Z",
+        "price_last_updated": "2026-04-04T21:09:09.000Z"
+      },
+      {
+        "fuel_type": "B7_STANDARD",
+        "price": 185.9,
+        "price_change_effective_timestamp": "2026-04-04T21:09:09.000Z",
+        "price_last_updated": "2026-04-04T21:09:09.000Z"
+      },
+      {
+        "fuel_type": "B7_PREMIUM",
+        "price": 195.9,
+        "price_change_effective_timestamp": "2026-04-04T21:09:09.000Z",
+        "price_last_updated": "2026-04-04T21:09:09.000Z"
+      }
+    ],
+    "node_id": "ae5b2f8f6979b8b2460ff52f85619dd0dfc6a10bc98ca1340b205911f20d4df5",
+    "public_phone_number": "+441204803610",
+    "trading_name": "MFG MORRISONS BOLTON ATLAS"
+  },
+  {
+    "fuel_prices": [
+      {
+        "fuel_type": "E5",
+        "price": 171.9,
+        "price_change_effective_timestamp": "2026-04-07T18:05:49.000Z",
+        "price_last_updated": "2026-04-07T17:08:40.402Z"
+      },
+      {
+        "fuel_type": "E10",
+        "price": 156.9,
+        "price_change_effective_timestamp": "2026-04-07T18:05:49.000Z",
+        "price_last_updated": "2026-04-07T17:08:40.402Z"
+      },
+      {
+        "fuel_type": "B7_STANDARD",
+        "price": 190.9,
+        "price_change_effective_timestamp": "2026-04-07T18:05:49.000Z",
+        "price_last_updated": "2026-04-07T17:08:40.402Z"
+      },
+      {
+        "fuel_type": "B7_PREMIUM",
+        "price": 204.9,
+        "price_change_effective_timestamp": "2026-04-07T18:05:49.000Z",
+        "price_last_updated": "2026-04-07T17:08:40.402Z"
+      }
+    ],
+    "node_id": "991498d756f4d2c04bf9f1c0f921e2ac56fcd9c1798b7e57fb0fccecde267e22",
+    "public_phone_number": "+443333450568",
+    "trading_name": "BASFORD ESSO EXPRESS"
+  },
+  {
+    "fuel_prices": [
+      {
+        "fuel_type": "E10",
+        "price": 158.9,
+        "price_change_effective_timestamp": "2026-04-07T09:40:17.000Z",
+        "price_last_updated": "2026-04-07T09:40:17.000Z"
+      },
+      {
+        "fuel_type": "B7_STANDARD",
+        "price": 193.9,
+        "price_change_effective_timestamp": "2026-04-07T09:40:17.000Z",
+        "price_last_updated": "2026-04-07T09:40:17.000Z"
+      }
+    ],
+    "node_id": "7becfac4d4da3b34391e01a63ec5e0cffd8c9e9b258dfb9553b63ff076bdca28",
+    "public_phone_number": "+441626352815",
+    "trading_name": "Dolbears Garage LTD"
+  }
+]

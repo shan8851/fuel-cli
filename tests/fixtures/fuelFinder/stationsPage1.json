@@ -1,0 +1,86 @@
+{
+  "data": [
+    {
+      "node_id": "node-1",
+      "public_phone_number": "+442071930000",
+      "trading_name": "Tesco Riverside",
+      "is_same_trading_and_brand_name": false,
+      "brand_name": "Tesco",
+      "temporary_closure": false,
+      "permanent_closure": false,
+      "permanent_closure_date": null,
+      "is_motorway_service_station": false,
+      "is_supermarket_service_station": true,
+      "location": {
+        "address_line_1": "1 River Road",
+        "address_line_2": null,
+        "city": "London",
+        "country": "England",
+        "county": null,
+        "postcode": "SE1 9SG",
+        "latitude": 51.4989,
+        "longitude": -0.1113
+      },
+      "amenities": ["customer_toilets", "water_filling"],
+      "opening_times": {
+        "usual_days": {
+          "monday": { "open": "06:00:00", "close": "22:00:00", "is_24_hours": false },
+          "tuesday": { "open": "06:00:00", "close": "22:00:00", "is_24_hours": false },
+          "wednesday": { "open": "06:00:00", "close": "22:00:00", "is_24_hours": false },
+          "thursday": { "open": "06:00:00", "close": "22:00:00", "is_24_hours": false },
+          "friday": { "open": "06:00:00", "close": "22:00:00", "is_24_hours": false },
+          "saturday": { "open": "07:00:00", "close": "22:00:00", "is_24_hours": false },
+          "sunday": { "open": "08:00:00", "close": "20:00:00", "is_24_hours": false }
+        },
+        "bank_holiday": {
+          "type": "standard",
+          "open_time": "08:00:00",
+          "close_time": "20:00:00",
+          "is_24_hours": false
+        }
+      },
+      "fuel_types": ["E10", "E5", "B7_STANDARD"]
+    },
+    {
+      "node_id": "node-2",
+      "public_phone_number": null,
+      "trading_name": "Shell Southwark",
+      "is_same_trading_and_brand_name": true,
+      "brand_name": "Shell",
+      "temporary_closure": false,
+      "permanent_closure": false,
+      "permanent_closure_date": null,
+      "is_motorway_service_station": false,
+      "is_supermarket_service_station": false,
+      "location": {
+        "address_line_1": "25 Borough High Street",
+        "address_line_2": null,
+        "city": "London",
+        "country": "England",
+        "county": null,
+        "postcode": "SE1 9SU",
+        "latitude": 51.503,
+        "longitude": -0.091
+      },
+      "amenities": ["adblue_pumps", "car_wash"],
+      "opening_times": {
+        "usual_days": {
+          "monday": { "open": "00:00:00", "close": "00:00:00", "is_24_hours": true },
+          "tuesday": { "open": "00:00:00", "close": "00:00:00", "is_24_hours": true },
+          "wednesday": { "open": "00:00:00", "close": "00:00:00", "is_24_hours": true },
+          "thursday": { "open": "00:00:00", "close": "00:00:00", "is_24_hours": true },
+          "friday": { "open": "00:00:00", "close": "00:00:00", "is_24_hours": true },
+          "saturday": { "open": "00:00:00", "close": "00:00:00", "is_24_hours": true },
+          "sunday": { "open": "00:00:00", "close": "00:00:00", "is_24_hours": true }
+        },
+        "bank_holiday": {
+          "type": "standard",
+          "open_time": "00:00:00",
+          "close_time": "00:00:00",
+          "is_24_hours": true
+        }
+      },
+      "fuel_types": ["E10", "B7_STANDARD", "B7_PREMIUM"]
+    }
+  ]
+}
