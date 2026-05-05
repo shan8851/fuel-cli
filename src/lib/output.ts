@@ -69,7 +69,7 @@ export const runCommand = async <TData>(
       !process.env["NO_COLOR"];
     const textContext: TextFormatterContext = {
       colorEnabled,
-      terminalWidth: getTerminalWidth(),
+      terminalWidth: 80,
       text: {
         joinAligned,
         padVisibleEnd,

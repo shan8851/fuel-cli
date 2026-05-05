@@ -1,0 +1,53 @@
+{
+  "commute": {
+    "fuel": "B7_STANDARD",
+    "stations": [
+      {
+        "searchText": "MFG BLUECOATS",
+        "display": "Walsall Bluecoats Esso",
+        "sort": 9
+      },
+      {
+        "searchText": "CHELMSFORD PRINCES RD SUPERSTORE",
+        "display": "Tesco Princes Rd",
+        "sort": 1
+      },
+      {
+        "searchText": "MFG OAKLANDS",
+        "display": "Oaklands Park Esso",
+        "sort": 1
+      },
+      {
+        "searchText": "MFG ADMIRAL",
+        "display": "Broomfield Rd Esso",
+        "sort": 1
+      },
+      {
+        "searchText": "MFG START HILL",
+        "display": "Stanstead roundabout Esso",
+        "sort": 3
+      },
+      {
+        "searchText": "WELCOME BREAK SPALDWICK",
+        "display": "Applegreen services (by tractors)",
+        "sort": 5
+      },
+
+      {
+        "searchText": "ASDA COVENTRY SUPERCENTRE",
+        "display": "Asda Coventry J2",
+        "sort": 7
+      },
+      {
+        "searchText": "MFG RED HOUSE",
+        "display": "Red House Esso",
+        "sort": 10
+      },
+      {
+        "searchText": "ASDA QUESLETT SUPERSTORE",
+        "display": "Asda Aunty sandra",
+        "sort": 10
+      }
+    ]
+  }
+}

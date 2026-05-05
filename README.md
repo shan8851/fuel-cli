@@ -10,6 +10,7 @@ UK fuel prices in your terminal. Built for AI agents, still useful for humans.
 fuel near "SE1 9SG" --fuel E10                           # Cheapest E10 nearby
 fuel near "51.501,-0.141" --fuel B7_STANDARD --radius 8mi # Diesel near coordinates
 fuel station "tesco watford"                              # Station detail by name
+fuel --list commute                                       # Named list from ./config.json
 fuel station "<node-id>" --json --output station.prices   # Project specific fields
 ```
 
@@ -53,6 +54,7 @@ Warm cache reads work without credentials until the local station/price cache ne
 | --- | --- |
 | `fuel near <location>` | Ranked nearby stations for a given fuel type |
 | `fuel station <query>` | Station detail by node ID or text search |
+| `fuel list <name>` | Station detail list loaded from `./config.json` |
 
 Supports UK postcodes (`SE1 9SG`) and coordinates (`51.501,-0.141`).
 
@@ -66,9 +68,44 @@ fuel near "SE1 9SG" --fuel E10 --limit 5     # Limit results
 fuel near "SE1 9SG" --fuel E10 --refresh     # Force cache refresh
 fuel station "tesco watford" --json          # JSON output
 fuel station "<node-id>" --text              # Force text output
+fuel list commute                            # Named station list from ./config.json
+fuel --list commute                          # Shortcut for `fuel list commute`
 ```
 
 **Fuel types:** `E10`, `E5`, `B7_STANDARD`, `B7_PREMIUM`, `B10`, `HVO`
+
+### Named Station Lists
+
+Create `config.json` in the directory where you run `fuel`:
+
+```json
+{
+  "commute": {
+    "fuel": "B7_STANDARD",
+    "stations": [
+      {
+        "searchText": "MFG BLUECOATS [ESSO]",
+        "display": "Bluecoats (home route)",
+        "sort": 2
+      },
+      {
+        "searchText": "TESCO WATFORD",
+        "sort": 1
+      }
+    ]
+  }
+}
+```
+
+Then run:
+
+```bash
+fuel list commute
+# or
+fuel --list commute
+```
+
+Optional per-station **`sort`** (number): lower values appear first. Omitted entries sort after any that define `sort`. In colour text mode, **prices** use rank-based tinting: the **cheapest 20%** of rows are green, the **most expensive 40%** are red, with a smooth ramp in between; names are plain.
 
 ## Agent Integration
 

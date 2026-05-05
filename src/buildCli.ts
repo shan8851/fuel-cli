@@ -2,6 +2,7 @@ import { createRequire } from "node:module";
 
 import { Command } from "commander";
 
+import { registerListCommand } from "./commands/listCommand.js";
 import { registerNearCommand } from "./commands/nearCommand.js";
 import { registerStationCommand } from "./commands/stationCommand.js";
 import { loadConfig } from "./lib/config.js";
@@ -19,6 +20,8 @@ export type CliDependencies = {
 const require = createRequire(import.meta.url);
 const packageJson = require("../package.json") as { version: string };
 const TOP_LEVEL_HELP_EXAMPLES = [
+  "fuel --list commute",
+  "fuel list commute",
   'fuel near "SE1 9SG" --fuel E10',
   'fuel near "51.501,-0.141" --fuel B7_STANDARD --radius 8mi',
   'fuel station "tesco watford"',
@@ -45,6 +48,7 @@ export const buildCli = (dependencies?: Partial<CliDependencies>): Command => {
 
   registerNearCommand(program, fuelService);
   registerStationCommand(program, fuelService);
+  registerListCommand(program, fuelService);
 
   program.addHelpText(
     "after",

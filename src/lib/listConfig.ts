@@ -1,0 +1,157 @@
+import { readFile } from "node:fs/promises";
+import { resolve } from "node:path";
+
+import { parseFuelType } from "./commandUtils.js";
+import { createAppError } from "./errors.js";
+import type { FuelType } from "./types.js";
+
+export type StationListEntry = {
+  display?: string;
+  /** Lower values appear first in list output. Omitted entries sort after those with `sort`. */
+  sort?: number;
+  searchText: string;
+};
+
+export type StationListDefinition = {
+  fuel: FuelType;
+  stations: StationListEntry[];
+};
+
+export type StationListsConfig = Record<string, StationListDefinition>;
+
+const CONFIG_FILE_NAME = "config.json";
+
+export const loadStationListsConfig = async (): Promise<StationListsConfig> => {
+  const configPath = resolve(process.cwd(), CONFIG_FILE_NAME);
+  const fileContents = await readConfigFile(configPath);
+  const parsed = parseConfigJson(fileContents, configPath);
+
+  return validateStationListsConfig(parsed, configPath);
+};
+
+const readConfigFile = async (configPath: string): Promise<string> => {
+  try {
+    return await readFile(configPath, "utf8");
+  } catch (error) {
+    const errorCode =
+      typeof error === "object" && error !== null && "code" in error && typeof error["code"] === "string"
+        ? error["code"]
+        : undefined;
+
+    if (errorCode === "ENOENT") {
+      throw createAppError(
+        "NOT_FOUND",
+        `Could not find config file at ${configPath}. Create config.json with list names mapped to { fuel, stations } objects.`
+      );
+    }
+
+    throw error;
+  }
+};
+
+const parseConfigJson = (fileContents: string, configPath: string): unknown => {
+  try {
+    return JSON.parse(fileContents);
+  } catch (error) {
+    throw createAppError("INVALID_INPUT", `Invalid JSON in ${configPath}.`, {
+      reason: error instanceof Error ? error.message : String(error)
+    });
+  }
+};
+
+const validateStationListsConfig = (parsed: unknown, configPath: string): StationListsConfig => {
+  if (typeof parsed !== "object" || parsed === null || Array.isArray(parsed)) {
+    throw createAppError("INVALID_INPUT", `${configPath} must be a JSON object with named station lists.`);
+  }
+
+  const entries = Object.entries(parsed as Record<string, unknown>);
+  const lists: StationListsConfig = {};
+
+  for (const [listName, listValue] of entries) {
+    if (typeof listValue !== "object" || listValue === null || Array.isArray(listValue)) {
+      throw createAppError("INVALID_INPUT", `List "${listName}" must be an object with "fuel" and "stations" keys.`);
+    }
+    const listDefinition = listValue as Record<string, unknown>;
+    const fuel = listDefinition["fuel"];
+    const stations = listDefinition["stations"];
+
+    if (typeof fuel !== "string" || fuel.trim().length === 0) {
+      throw createAppError("INVALID_INPUT", `List "${listName}" must include a non-empty string "fuel".`);
+    }
+
+    if (!Array.isArray(stations)) {
+      throw createAppError(
+        "INVALID_INPUT",
+        `List "${listName}" must include a "stations" array of station entries with "searchText" and optional "display".`
+      );
+    }
+
+    const normalizedEntries = stations.map((value, index) => normalizeStationListEntry(listName, value, index));
+
+    lists[listName] = {
+      fuel: parseFuelType(fuel),
+      stations: normalizedEntries
+    };
+  }
+
+  return lists;
+};
+
+const normalizeStationListEntry = (listName: string, value: unknown, index: number): StationListEntry => {
+  if (typeof value === "string") {
+    if (value.trim().length === 0) {
+      throw createAppError("INVALID_INPUT", `List "${listName}" contains an invalid entry at index ${index}.`);
+    }
+
+    return {
+      searchText: value.trim()
+    };
+  }
+
+  if (typeof value !== "object" || value === null || Array.isArray(value)) {
+    throw createAppError("INVALID_INPUT", `List "${listName}" entry ${index} must be a string or object.`);
+  }
+
+  const entry = value as Record<string, unknown>;
+  const searchText = entry["searchText"];
+  const display = entry["display"];
+  const legacyDisplayText = entry["displayText"];
+  const sortRaw = entry["sort"];
+
+  if (typeof searchText !== "string" || searchText.trim().length === 0) {
+    throw createAppError("INVALID_INPUT", `List "${listName}" entry ${index} must include non-empty "searchText".`);
+  }
+
+  if (display !== undefined && (typeof display !== "string" || display.trim().length === 0)) {
+    throw createAppError(
+      "INVALID_INPUT",
+      `List "${listName}" entry ${index} has invalid "display"; omit it or provide a non-empty string.`
+    );
+  }
+
+  if (legacyDisplayText !== undefined && (typeof legacyDisplayText !== "string" || legacyDisplayText.trim().length === 0)) {
+    throw createAppError(
+      "INVALID_INPUT",
+      `List "${listName}" entry ${index} has invalid legacy "displayText"; omit it or provide a non-empty string.`
+    );
+  }
+
+  const normalizedDisplay = typeof display === "string" ? display.trim() : undefined;
+  const normalizedLegacyDisplay = typeof legacyDisplayText === "string" ? legacyDisplayText.trim() : undefined;
+
+  let sort: number | undefined;
+
+  if (sortRaw !== undefined) {
+    if (typeof sortRaw !== "number" || !Number.isFinite(sortRaw)) {
+      throw createAppError("INVALID_INPUT", `List "${listName}" entry ${index} "sort" must be a finite number.`);
+    }
+
+    sort = sortRaw;
+  }
+
+  return {
+    ...(normalizedDisplay ? { display: normalizedDisplay } : normalizedLegacyDisplay ? { display: normalizedLegacyDisplay } : {}),
+    ...(sort !== undefined ? { sort } : {}),
+    searchText: searchText.trim()
+  };
+};

@@ -8,6 +8,10 @@ export const DEFAULT_RADIUS_MILES = 5;
 export const DEFAULT_NEAR_SORT: NearSort = "best";
 
 export const REQUEST_TIMEOUT_MS = 10_000;
+
+/** Paginated Fuel Finder payloads can exceed the default HTTP timeout on slow links. */
+export const FUEL_FINDER_BATCH_TIMEOUT_MS = 120_000;
+
 export const TOKEN_EXPIRY_BUFFER_SECONDS = 60;
 
 export const STATION_CACHE_TTL_MS = 60 * 60 * 1_000;

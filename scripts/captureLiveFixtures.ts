@@ -1,6 +1,7 @@
 import { mkdir, writeFile } from "node:fs/promises";
 
 import { loadConfig } from "../src/lib/config.js";
+import { FUEL_FINDER_BATCH_TIMEOUT_MS } from "../src/lib/constants.js";
 import { createAppError, toAppError } from "../src/lib/errors.js";
 import {
   FuelFinderAccessTokenResponseSchema,
@@ -124,6 +125,7 @@ const run = async (): Promise<void> => {
     },
     label: "Fuel Finder stations batch 1",
     schema: FuelFinderStationPageSchema,
+    timeoutMs: FUEL_FINDER_BATCH_TIMEOUT_MS,
     url: new URL("/api/v1/pfs?batch-number=1", config.fuelFinderBaseUrl)
   });
   const priceBatchResponse = await requestJson({
@@ -132,6 +134,7 @@ const run = async (): Promise<void> => {
     },
     label: "Fuel Finder prices batch 1",
     schema: FuelFinderPricePageSchema,
+    timeoutMs: FUEL_FINDER_BATCH_TIMEOUT_MS,
     url: new URL("/api/v1/pfs/fuel-prices?batch-number=1", config.fuelFinderBaseUrl)
   });
   const { priceSample, sharedNodeIds, stationSample } = selectLiveFixtureSamples(

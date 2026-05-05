@@ -1,4 +1,4 @@
-import { TOKEN_EXPIRY_BUFFER_SECONDS } from "../lib/constants.js";
+import { FUEL_FINDER_BATCH_TIMEOUT_MS, TOKEN_EXPIRY_BUFFER_SECONDS } from "../lib/constants.js";
 import { createAppError, isAppError } from "../lib/errors.js";
 import {
   FuelFinderAccessTokenResponseSchema,
@@ -90,6 +90,7 @@ export const createFuelFinderClient = (config: AppConfig): FuelFinderClient => {
           },
           label: `${labelPrefix} batch ${batchNumber}`,
           schema,
+          timeoutMs: FUEL_FINDER_BATCH_TIMEOUT_MS,
           url
         });
       } catch (error) {
