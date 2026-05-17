@@ -212,6 +212,30 @@ export interface StationCommandData {
   station: StationDetail;
 }
 
+export interface StationListCommandData {
+  input: {
+    fuelType: FuelType;
+    list: string;
+    refresh: boolean;
+  };
+  stations: Array<{
+    availableFuelTypes: FuelType[];
+    brandName: string;
+    display?: string;
+    freshnessBand: FreshnessBand;
+    freshnessMinutes: number | null;
+    lastUpdatedAt: string | null;
+    nodeId: string;
+    postcode: string;
+    qualityFlags: StationQualityFlag[];
+    /** Config `sort` key; lower first. Omitted in config sorts last. */
+    sortOrder: number;
+    selectedFuelType: FuelType;
+    selectedPricePencePerLitre: number;
+    tradingName: string;
+  }>;
+}
+
 export interface CacheEntry<TData> {
   cachedAt: string;
   data: TData;
@@ -252,6 +276,14 @@ export interface PostcodesClient {
 
 export interface FuelService {
   findStation: (query: string, options: { refresh: boolean }) => Promise<StationCommandData>;
+  findStationList: (
+    listName: string,
+    options: {
+      fuelType: FuelType;
+      refresh: boolean;
+      queries: Array<{ display?: string; searchText: string; sort?: number }>;
+    }
+  ) => Promise<StationListCommandData>;
   findStationsNear: (
     location: string,
     options: {

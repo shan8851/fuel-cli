@@ -29,26 +29,75 @@ export type TextStyler = {
   warning: (value: string) => string;
 };
 
-const getAnsiRgbCode = (hex: string): string => {
+const parseRgb = (hex: string): { blue: number; green: number; red: number } => {
   const normalizedHex = hex.startsWith("#") ? hex.slice(1) : hex;
-  const red = Number.parseInt(normalizedHex.slice(0, 2), 16);
-  const green = Number.parseInt(normalizedHex.slice(2, 4), 16);
-  const blue = Number.parseInt(normalizedHex.slice(4, 6), 16);
 
-  return `\u001B[38;2;${red};${green};${blue}m`;
+  return {
+    blue: Number.parseInt(normalizedHex.slice(4, 6), 16),
+    green: Number.parseInt(normalizedHex.slice(2, 4), 16),
+    red: Number.parseInt(normalizedHex.slice(0, 2), 16)
+  };
+};
+
+/** xterm 256-colour index (widely supported); truecolour `38;2` is often ignored in IDE / basic terminals. */
+const rgbToAnsi256Index = (red: number, green: number, blue: number): number => {
+  if ([red, green, blue].some((channel) => !Number.isFinite(channel))) {
+    return 7;
+  }
+
+  if (red === green && green === blue) {
+    if (red < 9) {
+      return 16;
+    }
+
+    if (red > 248) {
+      return 231;
+    }
+
+    return Math.round(((red - 8) / 247) * 24) + 232;
+  }
+
+  const r = Math.min(5, Math.max(0, Math.round((red / 255) * 5)));
+  const g = Math.min(5, Math.max(0, Math.round((green / 255) * 5)));
+  const b = Math.min(5, Math.max(0, Math.round((blue / 255) * 5)));
+
+  return 16 + 36 * r + 6 * g + b;
+};
+
+const getAnsiForegroundCode = (hex: string): string => {
+  const { blue, green, red } = parseRgb(hex);
+
+  return `\u001B[38;5;${rgbToAnsi256Index(red, green, blue)}m`;
 };
 
 const applyCode = (value: string, code: string, enabled: boolean): string =>
   enabled ? `${code}${value}${ANSI_RESET}` : value;
 
+/** `score` 1 = green (best), 10 = red (worst). Linear RGB between palette green and red. */
+export const wrapFreshnessScaleColour = (text: string, score1to10: number, enabled: boolean): string => {
+  if (!enabled) {
+    return text;
+  }
+
+  const t = Math.min(1, Math.max(0, (score1to10 - 1) / 9));
+  const fromRgb = parseRgb(PALETTE.green);
+  const toRgb = parseRgb(PALETTE.red);
+  const red = Math.round(fromRgb.red + (toRgb.red - fromRgb.red) * t);
+  const green = Math.round(fromRgb.green + (toRgb.green - fromRgb.green) * t);
+  const blue = Math.round(fromRgb.blue + (toRgb.blue - fromRgb.blue) * t);
+  const index = rgbToAnsi256Index(red, green, blue);
+
+  return applyCode(text, `\u001B[38;5;${index}m`, enabled);
+};
+
 export const createTextStyler = (enabled: boolean): TextStyler => ({
   bold: (value) => applyCode(value, ANSI_BOLD, enabled),
-  danger: (value) => applyCode(value, getAnsiRgbCode(PALETTE.red), enabled),
-  dim: (value) => applyCode(value, `${ANSI_DIM}${getAnsiRgbCode(PALETTE.dimGrey)}`, enabled),
-  header: (value) => applyCode(applyCode(value, getAnsiRgbCode(PALETTE.blue), enabled), ANSI_BOLD, enabled),
-  primary: (value) => applyCode(value, getAnsiRgbCode(PALETTE.white), enabled),
-  success: (value) => applyCode(value, getAnsiRgbCode(PALETTE.green), enabled),
-  warning: (value) => applyCode(value, getAnsiRgbCode(PALETTE.amber), enabled)
+  danger: (value) => applyCode(value, getAnsiForegroundCode(PALETTE.red), enabled),
+  dim: (value) => applyCode(value, `${ANSI_DIM}${getAnsiForegroundCode(PALETTE.dimGrey)}`, enabled),
+  header: (value) => applyCode(applyCode(value, getAnsiForegroundCode(PALETTE.blue), enabled), ANSI_BOLD, enabled),
+  primary: (value) => applyCode(value, getAnsiForegroundCode(PALETTE.white), enabled),
+  success: (value) => applyCode(value, getAnsiForegroundCode(PALETTE.green), enabled),
+  warning: (value) => applyCode(value, getAnsiForegroundCode(PALETTE.amber), enabled)
 });
 
 export const stripAnsi = (value: string): string => value.replaceAll(ANSI_PATTERN, "");

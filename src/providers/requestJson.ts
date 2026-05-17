@@ -9,6 +9,7 @@ type RequestJsonOptions<TData> = {
   schema: {
     parse: (input: unknown) => TData;
   };
+  timeoutMs?: number;
   url: URL;
 };
 
@@ -18,6 +19,7 @@ export const requestJson = async <TData>({
   label,
   method = "GET",
   schema,
+  timeoutMs = REQUEST_TIMEOUT_MS,
   url
 }: RequestJsonOptions<TData>): Promise<TData> => {
   try {
@@ -28,7 +30,7 @@ export const requestJson = async <TData>({
         ...headers
       },
       method,
-      signal: AbortSignal.timeout(REQUEST_TIMEOUT_MS)
+      signal: AbortSignal.timeout(timeoutMs)
     });
     const bodyText = await response.text();
     const parsedBody = bodyText === "" ? undefined : safeJsonParse(bodyText);

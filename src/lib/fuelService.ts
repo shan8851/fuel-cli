@@ -20,6 +20,30 @@ import type {
   StationDetail
 } from "./types.js";
 
+type StationListQueryEntry = {
+  display?: string;
+  searchText: string;
+  sort?: number;
+};
+
+const dedupeStationListQueries = (queries: StationListQueryEntry[]): StationListQueryEntry[] => {
+  const seenSearchKeys = new Set<string>();
+  const deduped: StationListQueryEntry[] = [];
+
+  for (const entry of queries) {
+    const key = entry.searchText.trim().toLowerCase();
+
+    if (seenSearchKeys.has(key)) {
+      continue;
+    }
+
+    seenSearchKeys.add(key);
+    deduped.push(entry);
+  }
+
+  return deduped;
+};
+
 const createStationCandidate = (station: IndexedStation): StationCandidate => ({
   addressLine1: station.location.addressLine1,
   brandName: station.brandName,
@@ -137,6 +161,7 @@ const resolveLocation = async (
 
 const getStationMatches = (stations: IndexedStation[], query: string): IndexedStation[] => {
   const normalizedQuery = query.trim().toLowerCase();
+  const normalizedBracketNameQuery = normalizedQuery.replace(/\s+\[[^\]]+\]$/, "").trim();
   const exactIdMatch = stations.find((station) => station.nodeId.toLowerCase() === normalizedQuery);
 
   if (exactIdMatch) {
@@ -158,8 +183,29 @@ const getStationMatches = (stations: IndexedStation[], query: string): IndexedSt
     return exactFieldMatches;
   }
 
+  const exactDisplayNameMatches = stations.filter((station) => {
+    const displayName = `${station.tradingName}${station.brandName !== station.tradingName ? ` [${station.brandName}]` : ""}`;
+    return displayName.toLowerCase() === normalizedQuery;
+  });
+
+  if (exactDisplayNameMatches.length > 0) {
+    return exactDisplayNameMatches;
+  }
+
+  const normalizedTradingNameMatches = stations.filter(
+    (station) => station.tradingName.toLowerCase() === normalizedBracketNameQuery
+  );
+
+  if (normalizedTradingNameMatches.length > 0) {
+    return normalizedTradingNameMatches;
+  }
+
   return stations
-    .filter((station) => station.searchText.includes(normalizedQuery))
+    .filter(
+      (station) =>
+        station.searchText.includes(normalizedQuery) ||
+        (normalizedBracketNameQuery.length > 0 && station.searchText.includes(normalizedBracketNameQuery))
+    )
     .sort((left, right) => left.tradingName.localeCompare(right.tradingName, "en-GB"));
 };
 
@@ -203,6 +249,84 @@ export const createFuelService = (
       },
       quality: buildStationQualitySummary(station),
       station
+    };
+  },
+  findStationList: async (listName, options) => {
+    const preparedQueries = dedupeStationListQueries(options.queries);
+
+    if (preparedQueries.length === 0) {
+      throw createAppError("INVALID_INPUT", `Configured list "${listName}" is empty.`);
+    }
+
+    const dataset = await datasetStore.getDataset({
+      refresh: options.refresh
+    });
+    const matchedStations = preparedQueries.map((queryEntry) => {
+      const matches = getStationMatches(dataset.stations, queryEntry.searchText);
+
+      if (matches.length === 0) {
+        throw createAppError("NOT_FOUND", `No station matched "${queryEntry.searchText}" from list "${listName}".`);
+      }
+
+      if (matches.length > 1) {
+        throw createAmbiguousQueryError(
+          queryEntry.searchText,
+          matches.slice(0, DEFAULT_LIMIT).map((station) => createStationCandidate(station))
+        );
+      }
+
+      const matchedStation = matches[0];
+
+      if (!matchedStation) {
+        throw createAppError("NOT_FOUND", `No station matched "${queryEntry.searchText}" from list "${listName}".`);
+      }
+
+      const stationDetail = toStationDetail(matchedStation);
+      const selectedPrice = stationDetail.prices.find((price) => price.fuelType === options.fuelType);
+
+      if (!selectedPrice) {
+        throw createAppError(
+          "NOT_FOUND",
+          `Station "${stationDetail.tradingName}" from list "${listName}" has no ${options.fuelType} price.`
+        );
+      }
+
+      const freshness = computeFreshness(selectedPrice.lastUpdatedAt);
+
+      return {
+        availableFuelTypes: stationDetail.availableFuelTypes,
+        brandName: stationDetail.brandName,
+        ...(queryEntry.display ? { display: queryEntry.display } : {}),
+        freshnessBand: freshness.freshnessBand,
+        freshnessMinutes: freshness.freshnessMinutes,
+        lastUpdatedAt: selectedPrice.lastUpdatedAt,
+        nodeId: stationDetail.nodeId,
+        postcode: stationDetail.location.postcode,
+        qualityFlags: stationDetail.qualityFlags,
+        selectedFuelType: selectedPrice.fuelType,
+        selectedPricePencePerLitre: selectedPrice.pencePerLitre,
+        sortOrder: queryEntry.sort ?? Number.POSITIVE_INFINITY,
+        tradingName: stationDetail.tradingName
+      };
+    });
+    const sortedStations = [...matchedStations].sort((left, right) => {
+      if (left.sortOrder !== right.sortOrder) {
+        return left.sortOrder - right.sortOrder;
+      }
+
+      const nameLeft = left.display ?? left.tradingName;
+      const nameRight = right.display ?? right.tradingName;
+
+      return nameLeft.localeCompare(nameRight, "en-GB");
+    });
+
+    return {
+      input: {
+        fuelType: options.fuelType,
+        list: listName,
+        refresh: options.refresh
+      },
+      stations: sortedStations
     };
   },
   findStationsNear: async (location, options): Promise<NearCommandData> => {

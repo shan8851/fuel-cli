@@ -15,6 +15,7 @@ const notImplemented = (label: string): never => {
 
 export const createStubFuelService = (overrides: Partial<FuelService> = {}): FuelService => ({
   findStation: vi.fn(async () => notImplemented("findStation")),
+  findStationList: vi.fn(async () => notImplemented("findStationList")),
   findStationsNear: vi.fn(async () => notImplemented("findStationsNear")),
   ...overrides
 });
